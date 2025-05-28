@@ -22,7 +22,7 @@ class SellerServiceTest extends TestCase
         $this->sellerService = new SellerService($this->sellerRepository, $this->hasher);
     }
 
-    public function testGetAllPaginated()
+    public function test_get_all_paginated()
     {
         $this->sellerRepository
             ->shouldReceive('paginate')
@@ -33,7 +33,7 @@ class SellerServiceTest extends TestCase
         $this->assertEquals(['seller1', 'seller2'], $result->all());
     }
 
-    public function testGetAllWithoutPagination()
+    public function test_get_all_without_pagination()
     {
         $this->sellerRepository
             ->shouldReceive('all')
@@ -58,7 +58,6 @@ class SellerServiceTest extends TestCase
             ->with('secret123')
             ->andReturn($hashedPassword);
 
-        // Espera que o repositório seja chamado com a senha hasheada
         $this->sellerRepository
             ->shouldReceive('create')
             ->once()
@@ -80,7 +79,7 @@ class SellerServiceTest extends TestCase
         $this->assertEquals($hashedPassword, $user->password);
     }
 
-    public function testUpdate()
+    public function test_can_update_seller()
     {
         $data = ['name' => 'Jane Doe'];
 
@@ -93,7 +92,7 @@ class SellerServiceTest extends TestCase
         $this->assertTrue($result);
     }
 
-    public function testDelete()
+    public function test_can_delete_seller()
     {
         $this->sellerRepository
             ->shouldReceive('delete')
@@ -104,7 +103,7 @@ class SellerServiceTest extends TestCase
         $this->assertTrue($result);
     }
 
-    public function testFind()
+    public function test_can_find_seller_by_id()
     {
         $seller = (object) ['id' => 1, 'name' => 'Seller Test'];
 

@@ -27,6 +27,10 @@ class UserController extends Controller
 
     public function store(StoreUserRequest $request)
     {
+        if(auth()->guard('web')->check()) {
+            return $this->responseService->redirect("dashboard");
+        }
+
         $data = $request->validated();
         $user = $this->userService->create($data);
         

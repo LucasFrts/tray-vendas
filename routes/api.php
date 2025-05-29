@@ -11,7 +11,20 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::Apiresource('sellers', SellerController::class)->except(['store']);
     Route::Apiresource('users', UserController::class)->except(['store']);
     Route::Apiresource('orders', OrderController::class);
 });
+
+Route::apiResource('sellers', SellerController::class)
+    ->middleware([
+        'can:viewAny,App\Models\Seller',   // index
+        'can:view,seller',                  // show
+    ])
+    ->except(['store', 'update', 'destroy']);
+
+Route::post('sellers',      [SellerController::class, 'store'])
+    ->middleware(['auth:sanctum', 'can:create,App\Models\Seller']);
+Route::put('sellers/{seller}',  [SellerController::class, 'update'])
+    ->middleware(['auth:sanctum', 'can:update,seller']);
+Route::delete('sellers/{seller}', [SellerController::class, 'destroy'])
+    ->middleware(['auth:sanctum', 'can:delete,seller']);

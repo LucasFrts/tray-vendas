@@ -15,7 +15,7 @@ class AddAuthTokenHeader
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $cookie_name = 'api_cookie';
+        $cookie_name = 'api_token';
 
         if (!$request->bearerToken()) {
             if ($request->hasCookie($cookie_name)) {

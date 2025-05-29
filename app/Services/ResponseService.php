@@ -76,6 +76,14 @@ class ResponseService
         ], 400);
     }
 
+    public function redirect($data = null)
+    {
+        return $this->response([
+            'success' => false,
+            'data' => $data
+        ], 302);
+    }
+
     /**
      * Sends a JSON response with the given data and HTTP status.
      *

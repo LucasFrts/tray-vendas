@@ -1,62 +1,160 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Tray Vendas
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+**Tray Vendas** é uma aplicação web desenvolvida para um processo seletivo. Seu objetivo é permitir o cadastro de vendedores, o registro de vendas e o envio automatizado de relatórios diários por e-mail, tanto para os vendedores quanto para os administradores.
 
-## About Laravel
+Este projeto está dividido em duas partes: uma API construída com Laravel e uma interface administrativa desenvolvida com Blade + Vue.js. A aplicação ainda se encontra em estágio de MVP.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 💪 Instruções para rodar localmente
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Pré-requisitos
 
-## Learning Laravel
+* PHP >= 8.1
+* Composer
+* Docker + Docker Compose
+* Laravel Sail
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Passos para rodar
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+1. Clone o repositório:
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+   ```bash
+   git clone https://github.com/seu-usuario/tray-vendas.git
+   cd tray-vendas
+   ```
 
-## Laravel Sponsors
+2. Copie o arquivo `.env.example`:
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+   ```bash
+   cp .env.example .env
+   ```
 
-### Premium Partners
+3. Instale as dependências do Laravel:
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+   ```bash
+   composer install
+   ```
 
-## Contributing
+4. Suba os containers com o Sail:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+   ```bash
+   ./vendor/bin/sail up -d
+   ```
 
-## Code of Conduct
+5. Instale as dependências do frontend e rode o build:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+   ```bash
+   ./vendor/bin/sail npm install && ./vendor/bin/sail npm run dev
+    ```
+6. Gere a laravel key
+   ```bash
+   ./vendor/bin/sail artisan key:generate
+   ```
 
-## Security Vulnerabilities
+7. Rode as migrations e seeders:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+   ```bash
+   ./vendor/bin/sail artisan migrate --seed
+   ```
 
-## License
+8. Rode o listener da fila para envio de e-mails:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-# tray-vendas
+   ```bash
+   ./vendor/bin/sail artisan queue:listen
+   ```
+
+9. Acesse no navegador:
+
+   ```
+   http://localhost
+   ```
+### Admin
+
+A aplicação posui um administrador original, pode logar com em em /admin/login com
+- email:admin@example.com
+- senha:admin123
+
+### Serviços disponíveis
+
+* **MySQL**: `localhost:3306`
+* **Redis**
+* **Mailpit**: `http://localhost:8025`
+
+---
+
+## 🧐 Processo de desenvolvimento
+
+O projeto foi desenvolvido em 3 dias com foco em entregar um MVP funcional. O maior desafio técnico foi implementar a autenticação para múltiplos tipos de usuários (`admin` e `vendedor`) com `guards` separados. Essa decisão trouxe complexidade, mas proporcionou aprendizado valioso.
+
+A arquitetura inicialmente proposta foi um **Clean MVC** com uso de **Services**, **Repositories**, injeção de dependência e controllers enxutos. Porém, com a limitação de tempo, nem todos os padrões puderam ser rigorosamente aplicados.
+
+A aplicação foi escrita com:
+
+* Laravel (API e web)
+* Inertia e Vue.js (interface)
+* Redis (cache e filas)
+* Mailpit (simulação de e-mails)
+
+---
+
+## ⚙️ Funcionalidades implementadas
+
+### API (Laravel Sanctum)
+
+* [x] Cadastro de vendedores (`POST /api/sellers`)
+* [x] Listagem de vendedores (sem filtros)
+* [x] Cadastro de vendas (`POST /api/orders`)
+* [x] Listagem de vendas (sem filtros funcionais)
+* [ ] Listagem de vendas por vendedor (incompleta)
+* [x] Autenticação básica com tokens (em progresso)
+
+### Aplicação Web
+
+* [x] Dashboard de administrador (`/admin/dashboard`)
+* [x] Dashboard de vendedor (`/dashboard`)
+* [x] Envio de relatório diário por e-mail para vendedor (via Job)
+* [x] Envio de relatório diário por e-mail para administrador (via Job)
+* [x] Reenvio manual de relatório via botão no painel admin
+* [x] Gerador de tokens de API para admin e vendedores (incompleto)
+* [x] Landing page e páginas de login para vendedor/admin
+
+> ✅ O envio de e-mails está funcionando e pode ser testado via painel admin. Os e-mails são direcionados ao Mailpit e enviados via Jobs.
+> ⚠️ O agendamento via cronjob está registrado no Laravel Scheduler, mas ainda não está sendo executado automaticamente.
+
+---
+
+## 🧰 Testes
+
+* [ ] Testes unitários e de integração
+
+  * A estrutura de testes foi iniciada, mas por falta de tempo, não há cobertura efetiva no momento.
+
+---
+
+## 🛠️ Conhecidos e Limitadores
+
+* ⚠️ Autenticação multi-guard ainda incompleta
+* ⚠️ Listagem de vendas e filtros por vendedor incompletos
+* ⚠️ Testes não implementados
+* ⚠️ Algumas páginas frontend com layout provisório
+* ⚠️ A arquitetura inicialmente planejada foi comprometida por limitações de tempo
+* ⚠️ Necessário rodar manualmente `sail artisan queue:listen` para processar os e-mails na fila
+* ⚠️ O comando `./vendor/bin/sail up -d` não está disponível imediatamente após o clone (necessário rodar `composer install` antes)
+
+---
+
+## 📦 Tecnologias utilizadas
+
+* PHP + Laravel 10
+* Vue.js + Blade
+* MySQL
+* Redis
+* Docker + Laravel Sail
+* Mailpit
+
+---
+
+## 🚀 Considerações finais
+
+Este projeto visa demonstrar habilidades em back-end com Laravel, front-end com Vue.js e integração entre múltiplos serviços (cache, fila, e-mail, autenticação). Embora o projeto esteja em MVP, serve como base sólida para expansão e aprimoramento.

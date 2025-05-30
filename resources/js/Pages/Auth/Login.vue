@@ -6,24 +6,38 @@ import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
+import {reactive} from 'vue';
+import axios from 'axios';
+import ToastService from '@/utils/toast';
 
 defineProps<{
     canResetPassword?: boolean;
     status?: string;
 }>();
 
-const form = useForm({
+const form = reactive({
     email: '',
     password: '',
     remember: false,
 });
 
-const submit = () => {
-    form.post(route('login'), {
-        onFinish: () => {
-            form.reset('password');
-        },
-    });
+const submit = async () => {
+    try{
+        const { data: response } = await axios.post('/admin/login', {
+            email: form.email,
+            password: form.password,
+            remember: form.remember
+        })
+        const { success } = response;
+        if (success) {
+            window.location.href = '/dashboard';
+        }
+    }
+    catch(e) {
+        ToastService.error('Email ou senha incorretos');
+        console.log(e);
+    }
+    
 };
 </script>
 
@@ -49,7 +63,6 @@ const submit = () => {
                     autocomplete="username"
                 />
 
-                <InputError class="mt-2" :message="form.errors.email" />
             </div>
 
             <div class="mt-4">
@@ -64,7 +77,6 @@ const submit = () => {
                     autocomplete="current-password"
                 />
 
-                <InputError class="mt-2" :message="form.errors.password" />
             </div>
 
             <div class="mt-4 block">
@@ -78,17 +90,14 @@ const submit = () => {
 
             <div class="mt-4 flex items-center justify-end">
                 <Link
-                    v-if="canResetPassword"
-                    :href="route('password.request')"
+                    href="/admin/register"
                     class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                 >
-                    Forgot your password?
+                    Ainda não é cadastrado? Clique aqui
                 </Link>
 
                 <PrimaryButton
                     class="ms-4"
-                    :class="{ 'opacity-25': form.processing }"
-                    :disabled="form.processing"
                 >
                     Log in
                 </PrimaryButton>

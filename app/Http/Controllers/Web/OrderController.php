@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Order\StoreOrderRequest;
@@ -28,7 +28,10 @@ class OrderController extends Controller
 
         if(Auth::user() instanceof \App\Models\Seller){
             $orders = $this->orderService->getOrdersBySellerId(Auth::user()->id);
-            return $this->responseService->success($orders);
+            return $this->responseService->success([
+                "orders" => $orders,
+                "message" => "Pedidos encontrados"
+            ]);
         }
 
         $orders = $this->orderService->getAll(true, $pageQuantity, $pageNumber);

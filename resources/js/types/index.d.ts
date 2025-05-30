@@ -12,3 +12,15 @@ export type PageProps<
         user: User;
     };
 };
+
+export interface Order {
+  id: string;
+  amount: number;
+  date: string; // ISO 8601 format, e.g., '2025-05-29T12:00:00Z'
+  seller_id: string;
+}
+
+export interface Seller{
+    id: string;
+    name: string;
+}

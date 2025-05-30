@@ -41,4 +41,14 @@ class OrderRepository extends BaseRepository implements OrderRepositoryInterface
     {
         return $this->getAll(true, $take, $quantity);
     }
+
+    public function getOrderBySellerId(string $id)
+    {
+        return $this->newQuery()->where('seller_id', $id)->get();
+    }
+
+    public function getDailyOrdersBySellerId(string $id)
+    {
+        return $this->newQuery()->where('seller_id', $id)->whereDate('created_at', today())->get();
+    }
 }

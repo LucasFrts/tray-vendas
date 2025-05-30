@@ -40,31 +40,17 @@ class SellerController extends Controller
      */
     public function store(StoreSellerRequest $request)
     {
-        if(auth()->guard('web')->check()) {
-            return $this->responseService->redirect("dashboard");
-        }
-
         $data = $request->validated();
         $seller = $this->sellerService->create($data);
         $token = $this->sellerService->createTokenById($seller->id);
-
+        
         if (!$request->is('api/*')) {
             Auth::guard('seller')->login($seller);
-            $cookie = Cookie::make(
-                name:     'api_token',
-                value:    $token,
-                minutes:  60 * 24 * 7,
-                path:     '/',           
-                domain:   config('session.domain'), 
-                secure:   config('session.secure_cookie'), 
-                httpOnly: true,          
-                sameSite: 'lax'          
-            );
 
             return $this->responseService->created([
                 "seller" => $seller,
                 "message" => "Vendedor criado com sucesso"
-            ])->withCookie($cookie);
+            ]);
         }        
         
         return $this->responseService->created([
@@ -81,7 +67,6 @@ class SellerController extends Controller
     {
         try{
             $actor = Auth::user();
-            
             if ($actor instanceof \App\Models\Seller && $actor->id != $id) {
                 return $this->responseService->forbidden();
             }

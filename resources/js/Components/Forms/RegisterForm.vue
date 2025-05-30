@@ -38,14 +38,16 @@ function register() {
 
 <template>
      <form class="bg-white rounded-2xl shadow p-6 md:p-8 space-y-5">
-        <h2 class="text-xl font-semibold text-gray-800">Register</h2>
-        <input v-model="form.name" type="text" placeholder="Name" class="input" />
+        <h2 class="text-xl font-semibold text-gray-800">Cadastro</h2>
+        <input v-model="form.name" type="text" placeholder="Nome" class="input" />
         <input v-model="form.email" type="email" placeholder="Email" class="input" />
-        <input v-model="form.password" type="password" placeholder="Password" class="input" />
-        <input v-model="form.password_confirmation" type="password" placeholder="Confirm Password" class="input" />
+        <input v-model="form.password" type="password" placeholder="Senha" class="input" />
+        <input v-model="form.password_confirmation" type="password" placeholder="Confirme a senha" class="input" />
         <button type="button" @click="register" class="btn-primary w-full">
-          Sign Up
+          Cadastrar
         </button>
+        <p class="text-md font-semibold pb-3">Já possui uma conta?</p>
+        <a href="/login" class="btn-primary w-full">Entrar</a>
       </form>
 </template>
 

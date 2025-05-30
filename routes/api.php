@@ -16,14 +16,11 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 Route::apiResource('sellers', SellerController::class)
-    ->middleware([
-        'can:viewAny,App\Models\Seller',   // index
-        'can:view,seller',                  // show
-    ])
+    ->middleware(['auth:sanctum'])
     ->except(['store', 'update', 'destroy']);
 
-Route::post('sellers',      [SellerController::class, 'store'])
-    ->middleware(['auth:sanctum', 'can:create,App\Models\Seller']);
+Route::post('sellers',      [SellerController::class, 'store']);
+
 Route::put('sellers/{seller}',  [SellerController::class, 'update'])
     ->middleware(['auth:sanctum', 'can:update,seller']);
 Route::delete('sellers/{seller}', [SellerController::class, 'destroy'])

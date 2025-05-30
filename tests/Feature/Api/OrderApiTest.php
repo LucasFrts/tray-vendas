@@ -4,6 +4,7 @@ namespace Tests\Feature\Api;
 
 use App\Models\Order;
 use App\Models\Seller;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -12,12 +13,16 @@ class OrderApiTest extends TestCase
     use RefreshDatabase;
 
     private string $token;
+    private string $adminToken;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $seller = Seller::factory()->create();
+        $admin = User::factory()->create();
+
+        $this->adminToken = $admin->createToken('AdminToken')->plainTextToken;
         $this->token = $seller->createToken('TestToken')->plainTextToken;
     }
 
@@ -53,7 +58,7 @@ class OrderApiTest extends TestCase
     {
         $order = Order::factory()->create();
 
-        $response = $this->withToken($this->token)->getJson("/api/orders/{$order->id}");
+        $response = $this->withToken($this->adminToken)->getJson("/api/orders/{$order->id}");
 
         $response->assertOk()
                  ->assertJsonFragment(['id' => $order->id]);
@@ -62,8 +67,7 @@ class OrderApiTest extends TestCase
     public function test_can_update_an_order()
     {
         $order = Order::factory()->create();
-
-        $response = $this->withToken($this->token)->putJson("/api/orders/{$order->id}", [
+        $response = $this->withToken($this->adminToken)->putJson("/api/orders/{$order->id}", [
             'amount' => 200,
             'date' => now()->format('Y-m-d'),
             'seller_id' => $order->seller_id,
@@ -79,7 +83,7 @@ class OrderApiTest extends TestCase
     {
         $order = Order::factory()->create();
 
-        $response = $this->withToken($this->token)->deleteJson("/api/orders/{$order->id}");
+        $response = $this->withToken($this->adminToken)->deleteJson("/api/orders/{$order->id}");
 
         $response->assertStatus(204);
         $this->assertSoftDeleted('orders', ['id' => $order->id]);

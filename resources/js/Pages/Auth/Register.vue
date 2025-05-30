@@ -5,20 +5,40 @@ import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
+import { reactive } from 'vue';
+import ToastService from '@/utils/toast';
+import axios from 'axios';
 
-const form = useForm({
+const form = reactive({
     name: '',
     email: '',
     password: '',
     password_confirmation: '',
 });
 
-const submit = () => {
-    form.post(route('register'), {
-        onFinish: () => {
-            form.reset('password', 'password_confirmation');
-        },
-    });
+const submit = async () => {
+    try{
+        if(!form.name || !form.email || !form.password || !form.password_confirmation) {
+            ToastService.warning('Preencha todos os campos');
+            return;
+        }
+
+        if (form.password !== form.password_confirmation) {
+            ToastService.warning('Senhas nao conferem');
+            return;
+          }
+        
+        const { data: response } = await axios.post('/admin/register', form);
+        const { success } = response;
+        
+        if (success) {
+            window.location.href = '/admin/dashboard';
+        }
+    }
+    catch(e) {
+        console.log(e);
+        ToastService.error('Erro ao cadastrar');
+    }
 };
 </script>
 
@@ -40,7 +60,7 @@ const submit = () => {
                     autocomplete="name"
                 />
 
-                <InputError class="mt-2" :message="form.errors.name" />
+
             </div>
 
             <div class="mt-4">
@@ -55,7 +75,7 @@ const submit = () => {
                     autocomplete="username"
                 />
 
-                <InputError class="mt-2" :message="form.errors.email" />
+
             </div>
 
             <div class="mt-4">
@@ -70,7 +90,7 @@ const submit = () => {
                     autocomplete="new-password"
                 />
 
-                <InputError class="mt-2" :message="form.errors.password" />
+
             </div>
 
             <div class="mt-4">
@@ -88,10 +108,6 @@ const submit = () => {
                     autocomplete="new-password"
                 />
 
-                <InputError
-                    class="mt-2"
-                    :message="form.errors.password_confirmation"
-                />
             </div>
 
             <div class="mt-4 flex items-center justify-end">
@@ -104,8 +120,6 @@ const submit = () => {
 
                 <PrimaryButton
                     class="ms-4"
-                    :class="{ 'opacity-25': form.processing }"
-                    :disabled="form.processing"
                 >
                     Register
                 </PrimaryButton>

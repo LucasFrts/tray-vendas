@@ -38,4 +38,16 @@ public function __construct(
         return $this->orderRepository->find($id);
     }
 
+    public function getOrdersBySellerId(string $id)
+    {
+        return $this->orderRepository->getOrderBySellerId($id);
+    
+    }
+
+    public function getDailyOrdersBySellerId(string $id)
+    {
+        return $this->orderRepository->getDailyOrdersBySellerId($id);
+    }
+
+
 }

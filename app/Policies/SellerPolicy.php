@@ -25,7 +25,7 @@ class SellerPolicy
         return $actor instanceof User || $actor instanceof Seller;
     }
     public function view($actor, Seller $seller)
-    {
+    {  
         return $actor instanceof User || $actor instanceof Seller;
     }
 }

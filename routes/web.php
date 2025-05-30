@@ -12,7 +12,6 @@ use App\Http\Controllers\Web\ReportController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->middleware('auth.handle-redirects')->name('home');
-Route::post('/users', [UserController::class, 'store'])->name('users.store');
 Route::post('/sellers', [SellerController::class, 'store'])->name('sellers.store');
 
 
@@ -29,8 +28,6 @@ Route::prefix('admin')->group(function () {
     });
     Route::get('/login', [AuthController::class, 'viewLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
-    Route::get('/register', [AuthController::class, 'viewRegister'])->name('register');
-    Route::post('/register', [AuthController::class, 'register']);
 });
 
 

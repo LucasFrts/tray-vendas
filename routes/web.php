@@ -22,6 +22,8 @@ Route::prefix('admin')->group(function () {
             Route::get('/vendedores', [AdminDashboardController::class, 'vendedores'])->name('admin.dashboard.vendedores');
             Route::get('/vendas', [AdminDashboardController::class, 'vendas'])->name('admin.dashboard.vendas');
         });
+        Route::get('/api-key', [AdminDashboardController::class, 'getApiKey']);
+        Route::post('/api-key', [AdminDashboardController::class, 'generateApiKey']);
         Route::get('/', function () {
             return redirect()->route('admin.dashboard');
         });

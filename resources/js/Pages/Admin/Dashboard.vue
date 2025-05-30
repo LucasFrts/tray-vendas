@@ -12,14 +12,14 @@
 
         <main class="p-6 space-y-6">
             <div class="flex items-center justify-between gap-3">
-                <OrderChart :orders="orders" class="max-height-900px" />
+                <OrderChart :orders="ordersChart" class="max-height-900px" />
                 <section class="flex flex-col md:flex-row gap-6">
                     <div class="card-size-double bg-gray-800 p-4 rounded-xl shadow text-center">
                         <h2 class="text-lg font-semibold mb-2">
                             Total de Vendas
                         </h2>
                         <p class="text-2xl text-green-400 font-bold">
-                            R$ {{ totalAmount / 100 }}
+                            R$ {{ (totalAmount / 100).toFixed(2).replace('.', ',') }}
                         </p>
                     </div>
                     <div class="flex gap-6 flex-col">
@@ -67,10 +67,10 @@
                         <li v-for="order in orders" :key="order.id"
                             class="py-2 flex justify-between items-center text-white">
                             <span>
-                                {{ new Date(order.date).toLocaleDateString() }} - R$ {{ order.amount / 100 }}
+                                {{ order.date &&new Date(order.date).toLocaleDateString() }} - R$ {{ order.amount && (order.amount / 100) }}
                             </span>
                             <span class="text-sm text-gray-400">
-                                {{ getSellerName(order.seller_id) }}
+                                {{ getSellerName(order) }}
                             </span>
                         </li>
                     </ul>
@@ -104,14 +104,29 @@ import OrderChart from "@/Components/OrderChart.vue";
 import type { Order, Seller } from "@/types";
 import ToastService from "@/utils/toast";
 
+
+const { totalAmount } = defineProps<{ totalAmount:number }>();
+
 const apiKey = ref<string | null>(null);
 const showKey = ref(false);
 const hasKey = ref(false);
 
+type OrderWithSeller = Partial<Order & {
+    seller: Seller
+}>;
 
-const orders = ref<Order[]>([]);
+const orders = ref<OrderWithSeller[] | Order[]>([]);
+const ordersChart = computed(() => {
+    return orders.value.map((order:OrderWithSeller) => {
+        return {
+            date: order.date,
+            amount: order.amount,
+            seller_id: order.seller_id,
+            id: order.id
+        } as Order;
+    })
+});
 const sellers = ref<Seller[]>([]);
-const totalAmount = ref(0);
 
 const fetchApiKey = async () => {
     const { data } = await axios.get('/admin/api-key');
@@ -129,13 +144,12 @@ const generateApiKey = async () => {
 
 const fetchOrders = async () => {
     try {
-        const { data: response } = await axios.get("/orders");
+        const { data: response } = await axios.get("/orders?withRelationship=1");
         const { data: content, success } = response;
         const { data } = content;
 
         if (success) {
             orders.value = data;
-            calculateTotalAmount();
         }
     } catch (e) {
         console.error(e);
@@ -155,16 +169,12 @@ const fetchSellers = async () => {
     }
 };
 
-const calculateTotalAmount = () => {
-    totalAmount.value = orders.value.reduce(
-        (sum, order) => sum + order.amount,
-        0
-    );
-};
 
-const getSellerName = (sellerId: string) => {
-    const seller = sellers.value.find((s) => s.id === sellerId);
-    return seller ? seller.name : "Desconhecido";
+const getSellerName = (order: OrderWithSeller) => {
+    
+    const seller = order.seller;
+    if(!seller) return "Desconhecido";
+    return seller.name ?? "Desconhecido";
 };
 
 const sendDailyReport = async (sellerId: string) => {

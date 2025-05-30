@@ -20,7 +20,7 @@ class OrderSeeder extends Seeder
             $sellers = Seller::factory()->count(10)->create();
         }
 
-        Order::factory()->count(50)->make()->each(function ($order) use ($sellers) {
+        Order::factory()->count(30)->make()->each(function ($order) use ($sellers) {
             $order->seller_id = $sellers->random()->id;
             $order->save();
         });

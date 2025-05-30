@@ -51,4 +51,14 @@ class OrderRepository extends BaseRepository implements OrderRepositoryInterface
     {
         return $this->newQuery()->where('seller_id', $id)->whereDate('created_at', today())->get();
     }
+
+    public function getTotalAmount()
+    {
+        return $this->newQuery()->get()->sum('amount');
+    }
+
+    public function paginateWithRelationship(int $take, int $quantity)
+    {
+        return $this->newQuery()->with('seller')->paginate($take, ['*'], 'page', $quantity);
+    }
 }

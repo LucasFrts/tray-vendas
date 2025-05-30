@@ -20,7 +20,7 @@ class OrderFactory extends Factory
         return [
             'seller_id' => Seller::factory(),
             'date' => $this->faker->date(),
-            'amount' => $this->faker->numberBetween(1000, 1000000),
+            'amount' => $this->faker->numberBetween(1000, 100000),
         ];
     }
 }

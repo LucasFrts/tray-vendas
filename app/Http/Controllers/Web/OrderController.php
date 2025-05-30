@@ -25,6 +25,7 @@ class OrderController extends Controller
     {
         $pageNumber = request('page', 1);
         $pageQuantity = request('quantity', 15);
+        $withRelationship = request('withRelationship', false);
 
         if(Auth::user() instanceof \App\Models\Seller){
             $orders = $this->orderService->getOrdersBySellerId(Auth::user()->id);
@@ -34,7 +35,7 @@ class OrderController extends Controller
             ]);
         }
 
-        $orders = $this->orderService->getAll(true, $pageQuantity, $pageNumber);
+        $orders = $this->orderService->getAll(true, $pageQuantity, $pageNumber, $withRelationship);
         return $this->responseService->success($orders);
     } 
 

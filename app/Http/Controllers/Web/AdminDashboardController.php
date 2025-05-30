@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Services\OrderService;
 use App\Services\ResponseService;
 use App\Services\UserService;
 use Illuminate\Http\Request;
@@ -14,12 +15,18 @@ class AdminDashboardController extends Controller
 {
     public function __construct(
         private ResponseService $responseService,
-        private UserService $userService
+        private UserService $userService,
+        private OrderService $orderService
     )
     {}
     public function index()
     {
-        return inertia('Admin/Dashboard');
+
+        $totalAmount = $this->orderService->getTotalAmount();
+        
+        return inertia('Admin/Dashboard', [
+            'totalAmount' => $totalAmount
+        ]);
     }
 
     public function getApiKey(Request $request)

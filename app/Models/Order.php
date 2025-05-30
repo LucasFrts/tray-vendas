@@ -18,6 +18,11 @@ class Order extends Model
         'date',
         'amount',
     ];
+
+    public function seller()
+    {
+        return $this->belongsTo(Seller::class, 'seller_id', 'id');
+    }
     
     protected static function booted(): void
     {

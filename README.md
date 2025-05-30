@@ -2,7 +2,7 @@
 
 **Tray Vendas** é uma aplicação web desenvolvida para um processo seletivo. Seu objetivo é permitir o cadastro de vendedores, o registro de vendas e o envio automatizado de relatórios diários por e-mail, tanto para os vendedores quanto para os administradores.
 
-Este projeto está dividido em duas partes: uma API construída com Laravel e uma interface administrativa desenvolvida com Blade + Vue.js. A aplicação ainda se encontra em estágio de MVP.
+Este projeto está dividido em duas partes: uma API construída com Laravel e uma interface administrativa desenvolvida com Laravel + Inertia + Vue.js. A aplicação ainda se encontra em estágio de MVP.
 
 ---
 

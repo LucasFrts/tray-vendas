@@ -17,7 +17,7 @@ class DailySellerReport extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct(public Seller $seller, public int $count, public float $total, public float $commission)
+    public function __construct(public Seller $seller, public int $count, public int $total, public int $commission)
     {
         //
     }

@@ -27,10 +27,8 @@ class SendSellerComissionMail implements ShouldQueue
      */
     public function handle(): void
     {
-        $totalSales = $this->orders->sum('total');
-        $totalCommissions = $this->orders->sum(function ($order) {
-            return $order->commission ?? 0;
-        });
+        $totalSales = $this->orders->sum('amount') / 100;
+        $totalCommissions = (int) $totalSales * 0.085;
         $salesCount = $this->orders->count();
 
         if ($salesCount > 0) {

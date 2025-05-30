@@ -87,7 +87,7 @@ A aplicação posui um administrador original, pode logar com em em /admin/login
 
 O projeto foi desenvolvido em 3 dias com foco em entregar um MVP funcional. O maior desafio técnico foi implementar a autenticação para múltiplos tipos de usuários (`admin` e `vendedor`) com `guards` separados. Essa decisão trouxe complexidade, mas proporcionou aprendizado valioso.
 
-A arquitetura inicialmente proposta foi um **Clean MVC** com uso de **Services**, **Repositories**, injeção de dependência e controllers enxutos. Porém, com a limitação de tempo, nem todos os padrões puderam ser rigorosamente aplicados.
+A arquitetura inicialmente proposta foi um **Clean MVC** com uso de **Service Layer**, **Repositories**, injeção de dependência e controllers enxutos. Porém, com a limitação de tempo, nem todos os padrões puderam ser rigorosamente aplicados.
 
 A aplicação foi escrita com:
 
@@ -116,7 +116,7 @@ A aplicação foi escrita com:
 * [x] Envio de relatório diário por e-mail para vendedor (via Job)
 * [x] Envio de relatório diário por e-mail para administrador (via Job)
 * [x] Reenvio manual de relatório via botão no painel admin
-* [x] Gerador de tokens de API para admin e vendedores (incompleto)
+* [x] Gerador de tokens de API para admin
 * [x] Landing page e páginas de login para vendedor/admin
 
 > ✅ O envio de e-mails está funcionando e pode ser testado via painel admin. Os e-mails são direcionados ao Mailpit e enviados via Jobs.

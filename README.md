@@ -147,7 +147,7 @@ A aplicação foi escrita com:
 ## 📦 Tecnologias utilizadas
 
 * PHP + Laravel 10
-* Vue.js + Blade
+* Vue.js + Inertia
 * MySQL
 * Redis
 * Docker + Laravel Sail
